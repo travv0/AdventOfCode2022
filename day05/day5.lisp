@@ -1,4 +1,4 @@
-(ql:quickload '(:alexandria :serapeum :fiveam :cl-ppcre :str))
+(ql:quickload '(:alexandria :serapeum :fiveam :str))
 
 (defpackage :aoc2022.day5
   (:use :cl)
@@ -69,9 +69,10 @@ move 1 from 1 to 2")
     stacks))
 
 (defun process-movements (f movements stacks)
-  (dolist (movement movements)
-    (funcall f movement stacks))
-  stacks)
+  (let ((stacks (a:copy-hash-table stacks)))
+    (dolist (movement movements)
+      (funcall f movement stacks))
+    stacks))
 
 (defun get-top-crates (stacks)
   (format nil "~{~c~}"
@@ -82,13 +83,10 @@ move 1 from 1 to 2")
 
 (defparameter *input* (a:read-file-into-string "input.txt"))
 
-(print (destructuring-bind (stacks movements)
-           (parse-input *input*)
-         (get-top-crates (process-movements #'old-process-movement movements stacks))))
-
-(print (destructuring-bind (stacks movements)
-           (parse-input *input*)
-         (get-top-crates (process-movements #'new-process-movement movements stacks))))
+(destructuring-bind (stacks movements)
+    (parse-input *input*)
+  (print (get-top-crates (process-movements #'old-process-movement movements stacks)))
+  (print (get-top-crates (process-movements #'new-process-movement movements stacks))))
 
 (fiveam:def-suite :aoc2022.day5)
 (fiveam:in-suite :aoc2022.day5)
