@@ -1,9 +1,5 @@
 (ql:quickload :alexandria)
 
-(defpackage :aoc2022.day6
-  (:use :cl)
-  (:local-nicknames (:a :alexandria)))
-
 (in-package :aoc2022.day6)
 
 (defun has-duplicate-p (list)
@@ -18,6 +14,8 @@
         unless (has-duplicate-p (subseq chars 0 len))
           return i))
 
-(let ((input (a:read-file-into-string "input.txt")))
-  (print (find-marker input 4))
-  (print (find-marker input 14)))
+(defun run (&optional (input "input.txt"))
+  (let ((input (a:read-file-into-string input)))
+    (print (find-marker input 4))
+    (print (find-marker input 14))))
+
