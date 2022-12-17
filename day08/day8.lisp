@@ -64,4 +64,46 @@
                 (list:countby (fn (x)
                                 (visible? x y ts))
                               (range 0 (- w 1))))
-              (range 0 (- h 1))))))
+              (range 0 (- h 1)))))
+
+  (declare get-scenic-score (Ufix -> Ufix -> Trees -> Ufix))
+  (define (get-scenic-score x y ts)
+    (let (Trees w h ht) = ts)
+    (let (Some treeHeight) = (ht:get ht (tuple x y)))
+    (lisp Ufix (x y w h ht treeHeight)
+      (cl:*
+       (cl:loop
+          for i from 0
+          for other-x from (cl:1- x) downto 0
+          when (cl:>= (cl:gethash (tuple other-x y) ht) treeHeight)
+            return (cl:1+ i)
+          finally (cl:return i))
+
+       (cl:loop
+          for i from 0
+          for other-x from (cl:1+ x) below w
+          when (cl:>= (cl:gethash (tuple other-x y) ht) treeHeight)
+            return (cl:1+ i)
+          finally (cl:return i))
+
+       (cl:loop
+          for i from 0
+          for other-y from (cl:1- y) downto 0
+          when (cl:>= (cl:gethash (tuple x other-y) ht) treeHeight)
+            return (cl:1+ i)
+          finally (cl:return i))
+
+       (cl:loop
+          for i from 0
+          for other-y from (cl:1+ y) below h
+          when (cl:>= (cl:gethash (tuple x other-y) ht) treeHeight)
+            return (cl:1+ i)
+          finally (cl:return i)))))
+
+  (declare get-max-scenic-score (Trees -> Ufix))
+  (define (get-max-scenic-score ts)
+    (let (Trees w h _) = ts)
+    (lisp Ufix (w h ts)
+      (cl:loop for x from 0 below w maximize
+        (cl:loop for y from 0 below h maximize
+           (get-scenic-score x y ts))))))
