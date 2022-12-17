@@ -18,8 +18,10 @@
   (define (find-marker len buffer)
     (into (find-marker* len len (into buffer))))
 
+  (declare run (String -> Unit))
   (define (run filename)
-    (lisp :a (filename)
+    (lisp Unit (filename)
       (cl:let ((input (a:read-file-into-string filename)))
         (cl:print (find-marker 4 input))
-        (cl:print (find-marker 14 input))))))
+        (cl:print (find-marker 14 input))
+        (coalton Unit)))))
